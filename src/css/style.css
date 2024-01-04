@@ -1,0 +1,289 @@
+/* new css */
+body {
+	box-sizing: border-box;
+	overflow: hidden;
+}
+.wrapper {
+	height: 100vh;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 4em;
+	padding-right: 4em;
+	background: linear-gradient(70deg, red, pink);
+}
+.scoreBox {
+	float: left;
+	vertical-align: middle;
+	height: 100px;
+	width: 100px;
+	text-align: center;
+	margin: auto;
+	border-radius: 30px;
+	box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.25),
+		-4px -4px 8px 0 rgba(255, 255, 255, 0.3);
+}
+.scoreBox > div {
+	float: left;
+	background-color: black;
+	height: 100px;
+	width: 100px;
+	text-align: center;
+	line-height: 6rem;
+	vertical-align: middle;
+	margin-bottom: 5px;
+
+	border-radius: 30px;
+	box-shadow: 4px 4px 8px 5px rgba(150, 150, 150, 0.25),
+		-4px -4px 8px 0 rgba(100, 100, 100, 0.3),
+		-4px -4px 8px 0 rgba(255, 255, 255, 0.3) inset,
+		4px 4px 8px 0 rgba(255, 255, 255, 0.3) inset;
+	font-size: 30px;
+	color: white;
+}
+.buttonContainer {
+	height: 100px;
+	display: inline-block;
+	align-content: center;
+	justify-content: space-around;
+	padding-top: 30px;
+}
+.lose {
+	visibility: hidden;
+}
+.container {
+	display: flex;
+	justify-content: space-around;
+
+	height: 100px;
+	width: auto;
+	margin-top: 25px;
+	padding: 20px 10px;
+	margin-top: 5px;
+	border-radius: 30px;
+	align-items: center;
+	background: #eeeeee;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+.container2 {
+	display: flex;
+	justify-content: space-around;
+	height: 100px;
+	width: auto;
+	padding: 20px 10px;
+	margin-top: 5px;
+	border-radius: 30px;
+	background: #eeeeee;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+.container3 {
+	height: 100px;
+	width: auto;
+	padding: 20px 10px;
+	margin-top: 5px;
+	border-radius: 30px;
+
+	background: #eeeeee;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.hide {
+	visibility: hidden;
+}
+/*
+    Dice Styles
+*/
+
+.dice {
+	position: relative;
+	width: 100px;
+	height: 100px;
+	margin-bottom: 10px;
+	transform-style: preserve-3d;
+	transition: 1s ease;
+}
+
+@keyframes rolling {
+	50% {
+		transform: rotateX(455deg) rotateY(455deg);
+	}
+}
+.face {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border-radius: 20px;
+	border: 5px solid #f6f3f0;
+	transform-style: preserve-3d;
+	background: linear-gradient(145deg, #dddbd8, #fff);
+}
+
+.face::before {
+	position: absolute;
+	content: '';
+	width: 100%;
+	height: 100%;
+	border-radius: 20px;
+	background: #f6f3f0;
+	transform: translateZ(-1px);
+}
+
+.face::after {
+	position: absolute;
+	content: '';
+	top: 50%;
+	left: 50%;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: #131210;
+}
+
+.front {
+	transform: translateZ(50px);
+}
+
+.back {
+	transform: rotateX(180deg) translateZ(50px);
+}
+
+.top {
+	transform: rotateX(90deg) translateZ(50px);
+}
+
+.bottom {
+	transform: rotateX(-90deg) translateZ(50px);
+}
+
+.right {
+	transform: rotateY(90deg) translateZ(50px);
+}
+
+.left {
+	transform: rotateY(-90deg) translateZ(50px);
+}
+
+.front::after {
+	width: 30px;
+	height: 30px;
+	background: #f63330;
+	margin: -15px 0 0 -15px;
+}
+
+.back::after {
+	margin: -35px 0 0 -30px;
+	box-shadow: 40px 0, 0 25px, 40px 25px, 0 50px, 40px 50px;
+}
+
+.top::after {
+	margin: -35px 0 0 -30px;
+	box-shadow: 40px 40px;
+}
+
+.bottom::after {
+	margin: -36px 0 0 -36px;
+	box-shadow: 26px 26px, 52px 52px, 52px 0, 0 52px;
+}
+
+.right::after {
+	margin: -30px 0 0 -30px;
+	box-shadow: 40px 0, 0 40px, 40px 40px;
+}
+
+.left::after {
+	margin: -35px 0 0 -35px;
+	box-shadow: 25px 25px, 50px 50px;
+}
+
+/*
+    Roll Button styles
+*/
+
+.roll {
+	display: inline-block;
+	background-color: black;
+	height: 100px;
+
+	text-align: center;
+	line-height: 6rem;
+	vertical-align: middle;
+	margin-bottom: 5px;
+	margin-left: 500px;
+	border-radius: 30px;
+	box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.25),
+		-4px -4px 8px 0 rgba(255, 255, 255, 0.3);
+	font-size: 30px;
+	color: white;
+}
+/* .roll { 
+	cursor: pointer;
+	color: #b33951;
+	margin-top: 6px;
+	height: 75px;
+	width: 100px;
+	padding: 6px 12px;
+	border-radius: 5px;
+	margin-left: 200px;
+	margin-right: 100px;
+	font: 700 12px 'Open Sans';
+	border: 4px solid #b33951;
+	transition: 0.4s;
+} */
+.roll > button {
+	background-color: black;
+	height: 100px;
+	width: 150px;
+	text-align: center;
+	line-height: 6rem;
+	vertical-align: middle;
+	margin-bottom: 5px;
+
+	border-radius: 18px;
+	box-shadow: 4px 4px 8px 5px rgba(150, 150, 150, 0.25),
+		-4px -4px 8px 0 rgba(100, 100, 100, 0.3),
+		-4px -4px 8px 0 rgba(255, 255, 255, 0.3) inset,
+		4px 4px 8px 0 rgba(255, 255, 255, 0.3) inset;
+	font-size: 25px;
+	color: white;
+}
+/* .roll2 {
+	cursor: pointer;
+	color: #b33951;
+	margin-top: 6px;
+	height: 75px;
+	width: 100px;
+	padding: 6px 12px;
+	border-radius: 5px;
+	margin-left: 150px;
+	margin-right: auto;
+	font: 16px 'Open Sans';
+	font-weight: 1000;
+	border: 4px solid #b33951;
+	transition: 0.4s;
+/}  */
+/* #updateScoreBoard {
+	cursor: pointer;
+	color: #b33951;
+	margin-top: 60px;
+	height: 75px;
+	padding: 6px 12px;
+	border-radius: 3px;
+	font: 700 16px 'Open Sans';
+	border: 2px solid #b33951;
+	transition: 0.4s;
+} */
+/*  #updateScoreBoard:hover {
+	color: #fff;
+	background: #292727;
+} */
+
+.roll:hover {
+	color: #fff;
+	background: #726a6c;
+}
+.roll2:hover {
+	color: #fff;
+	background: #6c5d60;
+}
