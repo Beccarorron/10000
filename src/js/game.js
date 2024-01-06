@@ -1,7 +1,8 @@
 /*game class*/
 import { Player } from './player.js';
 import { Dice } from './dice.js';
-export { Dice };
+import { game } from './app.js';
+
 export class Game {
 	currentPlayerIndex;
 	players;
@@ -28,34 +29,38 @@ export class Game {
 			(this.currentPlayerIndex + 1) % this.players.length;
 	}
 
-	//switches the logic between the first roll and the additional rolls until full reroll
-	rollButtonFirstOrMore() {
-		console.log(this.getCurrentPlayer().stillYourTurn);
+	//switches the logic between the first roll and the additional rolls next player turn
+	async getScore() {
 		if (!this.getCurrentPlayer().stillYourTurn) {
 			this.getCurrentPlayer().stillYourTurn = true;
-			this.getCurrentPlayer().dice.rollDice();
-			setTimeout(() => {
-				const eachDie = this.getCurrentPlayer().dice.valueOfEachDie;
-				this.getCurrentPlayer().playTurn(eachDie);
-			}, 4400);
-			return;
+			await Promise.all(this.getCurrentPlayer().dice.rollDice());
+			let eachDie = this.getCurrentPlayer().dice.valueOfEachDie;
+			return this.getCurrentPlayer().calculateScore(eachDie);
 		} else {
-			let roll = this.getCurrentPlayer().dice.keptDiceArray.map((diceDiv) =>
-				this.getCurrentPlayer().dice.diceMap.get(diceDiv)
-			);
-			this.checkSecondRollOrMore(roll);
-		}
-	}
-	checkSecondRollOrMore(roll) {
-		if (this.getCurrentPlayer().checkIfRollIsValid(roll) === true) {
-			this.reset(roll);
-		} else {
-			console.log('You cannot take non scoring dice!');
-		}
-	}
-	reset(roll) {
-		console.log(roll);
+			let roll = this.getCurrentPlayer().dice.keptDiceArray;
+			let result = roll.map((id) => id.value);
 
+			console.log(result);
+			if (this.getCurrentPlayer().checkIfRollIsValid(result) === false) {
+				// Calculate the score based on the dice the player chose to keep
+				let keptScore = this.getCurrentPlayer().calculateScore(result);
+				this.reset();
+				await Promise.all(this.getCurrentPlayer().dice.rollDice());
+				let newRoll = this.getCurrentPlayer().dice.valueOfEachDie;
+				// Calculate the score based on the new roll
+				let newScore = this.getCurrentPlayer().calculateScore(newRoll);
+				// Return the total score
+				return keptScore + newScore;
+			} else return -1;
+		}
+	}
+	overOneThousand() {
+		let totalScore = this.getCurrentPlayer().totalScore;
+
+		if (this.getCurrentPlayer().totalScore >= 1000) {
+		}
+	}
+	reset() {
 		while (this.getCurrentPlayer().dice.container.firstChild) {
 			this.getCurrentPlayer().dice.container.removeChild(
 				this.getCurrentPlayer().dice.container.firstChild
@@ -73,13 +78,12 @@ export class Game {
 		this.getCurrentPlayer().dice.keptDiceArray = [];
 		this.getCurrentPlayer().dice.valueOfEachDie = [];
 		this.getCurrentPlayer().dice.diceMap = new Map();
-		this.getCurrentPlayer().dice.diceid = 1;
+		this.getCurrentPlayer().dice.diceId = 1;
 		this.getCurrentPlayer().dice.index = 0;
 		this.getCurrentPlayer().dice.diceDiv = 0;
 		this.getCurrentPlayer().dice.diceDivs = [];
 		this.getCurrentPlayer().dice.keptDiceArray = [];
+		this.getCurrentPlayer().dice.diceOject = {};
 		this.getCurrentPlayer().dice.initializeDice(diceArrayLength);
-		this.getCurrentPlayer().calculateScore(roll);
-		setTimeout(() => this.getCurrentPlayer().dice.rollDice(), 1000);
 	}
 }

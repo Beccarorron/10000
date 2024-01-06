@@ -1,4 +1,4 @@
-import { game } from './app.js';
+/*dice class*/
 
 export class Dice {
 	constructor() {
@@ -6,7 +6,7 @@ export class Dice {
 		this.keptDiceArray = [];
 		this.valueOfEachDie = [];
 		this.diceMap = new Map();
-		this.diceid = 1;
+		this.diceId = 1;
 		this.container = document.querySelector('.container');
 		this.container2 = document.querySelector('.container2');
 		this.rollDice = this.rollDice.bind(this);
@@ -16,6 +16,7 @@ export class Dice {
 		this.faceClasses = ['front', 'back', 'left', 'right', 'top', 'bottom'];
 		this.initializeDice(howManyDice);
 	}
+
 	initializeDice(howManyDice) {
 		Array.from({ length: howManyDice }).forEach(() => {
 			let diceDiv = document.createElement('div');
@@ -34,64 +35,47 @@ export class Dice {
 
 	rollDice() {
 		this.diceArray = [];
-		console.log(this.diceDivs);
+		let promises = [];
 		this.diceDivs.forEach((diceDiv, i) => {
-			console.log(diceDiv);
 			const randomNumber = Math.floor(Math.random() * 6) + 1;
-			this.diceArray.push({ value: randomNumber, id: this.diceid });
+			this.diceArray.push({ value: randomNumber, id: this.diceId });
 			this.diceMap.set(diceDiv, {
 				value: randomNumber,
-				id: this.diceid,
+				id: this.diceId,
 			});
-			this.diceid++;
+			this.diceId++;
 			diceDiv.style.animation = 'rolling 4s';
-
 			this.valueOfEachDie.push(randomNumber);
-			console.log(this.diceDivs[i]);
-			setTimeout(() => {
-				switch (randomNumber) {
-					case 1:
-						diceDiv.style.transform = 'rotateX(0deg) rotateY(0deg)';
-						break;
-
-					case 6:
-						diceDiv.style.transform = 'rotateX(180deg) rotateY(0deg)';
-						break;
-
-					case 2:
-						diceDiv.style.transform = 'rotateX(-90deg) rotateY(0deg)';
-						break;
-
-					case 5:
-						diceDiv.style.transform = 'rotateX(90deg) rotateY(0deg)';
-						break;
-
-					case 3:
-						diceDiv.style.transform = 'rotateX(0deg) rotateY(90deg)';
-						break;
-
-					case 4:
-						diceDiv.style.transform = 'rotateX(0deg) rotateY(-90deg)';
-						break;
-					default:
-						break;
-				}
-				console.log(this.diceMap);
-				console.log(this.diceArray);
-				diceDiv.style.animation = 'none';
-			}, 4050);
+			let promise = new Promise((resolve) => {
+				setTimeout(() => {
+					const transforms = [
+						'rotateX(0deg) rotateY(0deg)', // 1
+						'rotateX(-90deg) rotateY(0deg)', // 2
+						'rotateX(0deg) rotateY(90deg)', // 3
+						'rotateX(0deg) rotateY(-90deg)', // 4
+						'rotateX(90deg) rotateY(0deg)', // 5
+						'rotateX(180deg) rotateY(0deg)', // 6
+					];
+					diceDiv.style.transform = transforms[randomNumber - 1];
+					diceDiv.style.animation = 'none';
+					resolve(this.valueOfEachDie);
+				}, 4050);
+			});
+			promises.push(promise);
 		});
+		return promises;
 	}
-	get keptArray() {
-		return this.keptDiceArray;
-	}
+
 	onClick(diceDiv) {
+		console.log(this.diceMap);
 		const diceObject = this.diceMap.get(diceDiv);
 		if (this.container.contains(diceDiv)) {
 			this.container.removeChild(diceDiv);
 			this.container2.appendChild(diceDiv);
+			console.log(this.container);
 			console.log(this.container2);
-
+			console.log(diceObject);
+			console.log(this.diceMap);
 			const index = this.diceArray.findIndex(
 				(dice) => dice.id === diceObject.id
 			);
@@ -103,12 +87,15 @@ export class Dice {
 				console.log(this.diceArray);
 				console.log(index);
 			}
+			console.log(this.diceMap);
 		} else if (this.container2.contains(diceDiv)) {
 			this.container2.removeChild(diceDiv);
 			this.container.appendChild(diceDiv);
 			const index = this.keptDiceArray.findIndex(
 				(dice) => dice.id === diceObject.id
 			);
+			console.log(diceObject);
+			console.log(this.diceMap);
 			if (index !== -1) {
 				const [dice] = this.keptDiceArray.splice(index, 1);
 				this.diceArray.push(dice);

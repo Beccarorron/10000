@@ -1,24 +1,21 @@
-import { game } from './app.js';
-import { dice } from './game.js';
+/*player class*/
+
 export class Player {
 	constructor(dice, game) {
-		this.counts = [];
-
 		this.dice = dice;
 		this.game = game;
 		this.stillYourTurn = false;
 		this.score = 0;
-		this.rollDuplicate = 0;
-		this.rollHistory = [];
-		this.getDiceArray = [];
+		this.totalScore = 0;
+		this.overThousand = false;
 	}
 	//calculates the score for each roll
 	calculateScore(roll) {
 		let score = 0;
 
 		console.log(roll);
-		let counts = [];
-		counts = new Array(7).fill(0);
+
+		let counts = new Array(7).fill(0);
 		for (let i = 0; i < roll.length; i++) {
 			counts[roll[i]] += 1;
 			console.log(counts);
@@ -52,64 +49,50 @@ export class Player {
 		}
 
 		score += counts[1] * 100 + counts[5] * 50;
-		this.score = +score;
+		this.score = score;
+
 		return this.score;
-	}
-
-	//each player's first roll
-	playTurn(roll) {
-		this.rollHistory.push(roll);
-
-		let score = this.calculateScore(roll);
-		if (score === 0) {
-			console.log('Farkle! you rolled 0 points!');
-			return;
-		} else console.log(`You scored ${score} points!`);
-		console.log(`your roll history is: ${this.rollHistory}`);
 	}
 
 	//looking for non-scoring dice after the first roll
 
-	//helper straight method for checkIfRollIsValid method
-	straightOrNot(counts) {
-		for (let i = 1; i <= 6; i++) {
-			if (counts[i] !== 1) {
-				return false;
-			}
-		}
-		return true;
-	}
 	checkIfRollIsValid(roll) {
-		this.rollDuplicate = roll;
 		let counts = new Array(7).fill(0);
-		roll.forEach((die) => {
-			counts[die] += 1;
-		});
-		console.log(counts);
+		for (let i = 0; i < roll.length; i++) {
+			counts[roll[i]] += 1;
+		}
 
 		//checks for a straight
-		if (this.straightOrNot(counts)) {
-			return true;
+		let isStraight = true;
+		for (let i = 1; i <= 6; i++) {
+			if (counts[i] !== 1) {
+				isStraight = false;
+				break;
+			}
+		}
+		if (isStraight) {
+			return false;
 		}
 
 		//checks for three pairs
 		let pairs = counts.filter((count) => count === 2);
 		if (pairs.length === 3) {
-			return true;
+			return false;
 		}
 
-		//checks for non-scoring dice
+		//checks for any 1's or 5's
+		if (counts[1] > 0 || counts[5] > 0) {
+			return false;
+		}
+
+		//checks for three of any number
 		for (let i = 1; i <= 6; i++) {
-			// If the die is a 1 or a 5, it contributes to the score even if there's only one
-			if (i === 1 || i === 5) {
-				continue;
-			}
-			// If there are less than three of any other die, they don't contribute to the score
-			if (counts[i] > 0 && counts[i] < 3) {
+			if (counts[i] === 3) {
 				return false;
 			}
 		}
 
+		// If none of the conditions are met, the roll is valid
 		return true;
 	}
 }
